@@ -15,27 +15,27 @@ export class PostService implements OnDestroy {
   private postsSubject = new BehaviorSubject<Post[]>([]);
   private _unsubscribeAll = new Subject<any>();
   public numLikes!: number;
-  public  sessionPosts: any[] = [];
+  public sessionPosts: any[] = [];
 
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient) { }
 
 
-setPosts(posts : any){
-  this.sessionPosts = posts;
-}
+  setPosts(posts: any) {
+    this.sessionPosts = posts;
+  }
 
-getAllPosts(): Observable<any> {
-  const requestOptions = {
-        headers: new HttpHeaders({
-          "Authorization": `${sessionStorage.getItem('Authorization')}`
-        })
-      };
+  getAllPosts(): Observable<any> {
+    const requestOptions = {
+      headers: new HttpHeaders({
+        "Authorization": `${sessionStorage.getItem('Authorization')}`
+      })
+    };
 
 
-  return this.httpClient
-    .get<Post[]>(`${environment.url}/post/page/all`, requestOptions);
-}
+    return this.httpClient
+      .get<Post[]>(`${environment.url}/post/page/all`, requestOptions);
+  }
 
 
   public createPost(post: Post) {
@@ -45,7 +45,7 @@ getAllPosts(): Observable<any> {
       })
     };
     this.httpClient
-      .post<Post>(environment.url+'/post', post, requestOptions)
+      .post<Post>(environment.url + '/post', post, requestOptions)
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((data) => {
         const currentValue = this.postsSubject.value;
@@ -64,10 +64,10 @@ getAllPosts(): Observable<any> {
 
   getPostsByFollowers(pageNumber: number): any {
     const requestOptions = {
-          headers: new HttpHeaders({
-            "Authorization": `${sessionStorage.getItem('Authorization')}`
-          })
-        };
+      headers: new HttpHeaders({
+        "Authorization": `${sessionStorage.getItem('Authorization')}`
+      })
+    };
     this.httpClient
       .get<Post[]>(`${environment.url}/post/page/${pageNumber}`, requestOptions)
       .pipe(takeUntil(this._unsubscribeAll))
@@ -81,7 +81,7 @@ getAllPosts(): Observable<any> {
       });
   }
 
-  getGroupPosts(id: number): Observable<Post[]>{
+  getGroupPosts(id: number): Observable<Post[]> {
     const requestOptions = {
       headers: new HttpHeaders({
         "Authorization": `${sessionStorage.getItem('Authorization')}`
@@ -91,19 +91,19 @@ getAllPosts(): Observable<any> {
   }
 
   getNumLikes(post: Post): Observable<number> {
-    const headerDict = {'post': `${post.psid}`, "find": "false", "Authorization": `${sessionStorage.getItem('Authorization')}`};
+    const headerDict = { 'psid': `${post.psid}`, "find": "false", "Authorization": `${sessionStorage.getItem('Authorization')}` };
     const requestOptions = {
       headers: new HttpHeaders(headerDict)
     };
-    return this.httpClient.get<number>(environment.url+'/like', requestOptions).pipe(takeUntil(this._unsubscribeAll));
+    return this.httpClient.get<number>(environment.url + '/like', requestOptions).pipe(takeUntil(this._unsubscribeAll));
   }
 
   getLiked(post: Post): Observable<number> {
-    const headerDict = {'post': `${post.psid}`, "find": "true", "Authorization": `${sessionStorage.getItem('Authorization')}`};
+    const headerDict = { 'psid': `${post.psid}`, "find": "true", "Authorization": `${sessionStorage.getItem('Authorization')}` };
     const requestOptions = {
       headers: new HttpHeaders(headerDict)
     };
-    return this.httpClient.get<number>(environment.url+'/like', requestOptions).pipe(takeUntil(this._unsubscribeAll));
+    return this.httpClient.get<number>(environment.url + '/like', requestOptions).pipe(takeUntil(this._unsubscribeAll));
   }
 
   postLike(post: Post): Observable<Profile> {
@@ -112,7 +112,7 @@ getAllPosts(): Observable<any> {
         "Authorization": `${sessionStorage.getItem('Authorization')}`
       })
     };
-    return this.httpClient.post<Profile>(environment.url+'/like', post, requestOptions).pipe(takeUntil(this._unsubscribeAll));
+    return this.httpClient.post<Profile>(environment.url + '/like', post, requestOptions).pipe(takeUntil(this._unsubscribeAll));
   }
 
   deleteLike(post: Post): Observable<Profile> {
@@ -122,7 +122,7 @@ getAllPosts(): Observable<any> {
       }),
       body: post,
     };
-    return this.httpClient.delete<Profile>(environment.url+'/like', options).pipe(takeUntil(this._unsubscribeAll));
+    return this.httpClient.delete<Profile>(environment.url + '/like', options).pipe(takeUntil(this._unsubscribeAll));
   }
 
   ngOnDestroy(): void {
